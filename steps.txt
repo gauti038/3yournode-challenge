@@ -1,0 +1,42 @@
+postgres :
+sudo -u postgres createdb sample;
+sudo -u postgres psql
+
+    CREATE USER realworld WITH PASSWORD 'realworld123';
+    grant all privileges on database sample to realworld ;
+
+
+
+@@
+create python env 
+
+apt-get install libpq-dev python-dev
+pip install -r requirements.txt 
+pip install psycopg2
+
+
+front end 
+install yarn 
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+
+
+yarn install didnt work - 
+sudo apt remove cmdtest
+sudo apt remove yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
+
+
+download centos image
+http://centos.mirrors.estointernet.in/7.6.1810/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso
+
+/etc/yum.repos.d/CentOS-Base.repo
+[base]
+name=CentOS-$releasever - Base
+mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
+baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+

@@ -1,0 +1,63 @@
+version: '3.2'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    expose:
+      - "5432"
+    # restart: always
+    environment:
+      POSTGRES_PASSWORD: realworld123
+      POSTGRES_USER: realworld
+      POSTGRES_DB: sample
+  backend:
+    # build: 
+    #   context: .
+    #   dockerfile: ./Dockerfile-backend
+    image: backend-django:test1
+    container_name: backend
+    # restart: always
+    environment: 
+      DATABASE_NAME: sample
+      DATABASE_USER: realworld
+      DATABASE_PASSWORD: realworld123
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+    expose:
+      - "8000"
+    depends_on:
+      - postgres
+  frontend:
+    # build: 
+    #   context: .
+    #   dockerfile: ./Dockerfile-frontend
+    image: frontend-vue:test1
+    container_name: frontend
+    # restart: always
+    expose:
+      - "80"
+  reverse-proxy:
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile-reverse-proxy
+    image: reverse-proxy:test1
+    container_name: reverse-proxy
+    # restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+  scope:
+    image: weaveworks/scope:1.10.2
+    network_mode: "host"
+    pid: "host"
+    privileged: true
+    labels:
+      - "works.weave.role=system"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:rw"
+    command:
+      - "--probe.docker=true"
+      - "--weave=false"
+    depends_on:
+      - backend
