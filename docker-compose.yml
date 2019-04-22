@@ -40,6 +40,9 @@ services:
     ports:
       - "9000:9000"
       - "9001:9001"
+    depends_on:
+      - backend
+      - frontend
   scope:
     image: weaveworks/scope:1.10.2
     network_mode: "host"
