@@ -1,47 +1,35 @@
 ---
-- name: Install docker
+- name: Install and run the application
   gather_facts: No
-  hosts: tier1
+  hosts: centos_host
 
   tasks:
-    - name: upgrade all packages
-      yum: name=* state=latest
-
-    - name: Install yum utils
+    - name: upgrade all yum packages
       yum:
-        name: yum-utils
+        name: '*'
         state: latest
 
-    - name: Install device-mapper-persistent-data
+    - name: Install a list of yum packages
       yum:
-        name: device-mapper-persistent-data
-        state: latest
+        name:
+          - yum-utils
+          - epel-release
+          - python-devel
+          - device-mapper-persistent-data 
+          - lvm2
+          - git
+        state: present
 
-    - name: Install lvm2
+    - name: Install python pip 
       yum:
-        name: lvm2
-        state: latest
+        name:
+          - python-pip
+        state: present
 
     - name: Add Docker repo
       get_url:
         url: https://download.docker.com/linux/centos/docker-ce.repo
         dest: /etc/yum.repos.d/docer-ce.repo
-      become: yes
-
-    - name: Enable Docker Edge repo
-      ini_file:
-        dest: /etc/yum.repos.d/docer-ce.repo
-        section: 'docker-ce-edge'
-        option: enabled
-        value: 0
-      become: yes
-
-    - name: Enable Docker Test repo
-      ini_file:
-        dest: /etc/yum.repos.d/docer-ce.repo
-        section: 'docker-ce-test'
-        option: enabled
-        value: 0
       become: yes
 
     - name: Install Docker
@@ -57,20 +45,27 @@
         enabled: yes
       become: yes
 
-    - name: Add user vagrant to docker group
-      user:
-        name: vagrant
-        groups: docker
-        append: yes
-      become: yes
+    # - name: Check if Docker Compose is installed
+    #   command: docker-compose --version
+    #   register: docker_compose_check
+    #   ignore_errors: yes
 
-    - name: Download and install Docker Compose
-      get_url:
-        url: https://github.com/docker/compose/releases/download/1.21.2/docker-compose-Linux-x86_64
-        dest: /usr/bin/docker-compose
-        mode: 0755
-      when:
-        - docker_compose_check.msg is defined
-        - docker_compose_check.msg.find('No such file or directory') != -1
+    - name: install docker compose
+      shell: pip install docker-compose
+      # when:
+      #   - docker_compose_check.msg is defined
+      #   - docker_compose_check.msg.find('No such file or directory') != -1
+    
+    - name: Get required repos from git
+      git: repo=https://github.com/gauti038/3yournode-challenge.git dest=/app/
 
+    - name: build the front-end image
+      shell: docker build -t frontend-vue:test1 /app/frontend
+
+    - name: build the backend-end image
+      shell: docker build -t backend-django:test1 /app/backend
+    
+    - name: run the service defined by docker-compose.yml
+      docker_service:
+        project_src: /app/
         

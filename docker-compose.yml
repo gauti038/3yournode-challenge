@@ -11,11 +11,10 @@ services:
       POSTGRES_PASSWORD: realworld123
       POSTGRES_USER: realworld
       POSTGRES_DB: sample
+    volumes:
+      - /app/db_backup/:/var/lib/postgresql
   backend:
-    # build: 
-    #   context: .
-    #   dockerfile: ./Dockerfile-backend
-    image: backend-django:test1
+    image: gka038/backend-django:test1
     container_name: backend
     # restart: always
     environment: 
@@ -29,19 +28,13 @@ services:
     depends_on:
       - postgres
   frontend:
-    # build: 
-    #   context: .
-    #   dockerfile: ./Dockerfile-frontend
-    image: frontend-vue:test1
+    image: gka038/frontend-vue:test1
     container_name: frontend
     # restart: always
     expose:
       - "80"
   reverse-proxy:
-    # build:
-    #   context: .
-    #   dockerfile: ./Dockerfile-reverse-proxy
-    image: reverse-proxy:test1
+    image: gka038/reverse-proxy:test1
     container_name: reverse-proxy
     # restart: always
     ports:

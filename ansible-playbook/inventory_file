@@ -2,7 +2,7 @@
 ansible_connection=ssh
 ansible_user=root
 
-[tier1]
-192.168.99.100
+[centos_host]
+192.168.0.100
 
 
