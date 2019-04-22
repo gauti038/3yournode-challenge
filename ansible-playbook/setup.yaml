@@ -45,25 +45,11 @@
         enabled: yes
       become: yes
 
-    # - name: Check if Docker Compose is installed
-    #   command: docker-compose --version
-    #   register: docker_compose_check
-    #   ignore_errors: yes
-
     - name: install docker compose
       shell: pip install docker-compose
-      # when:
-      #   - docker_compose_check.msg is defined
-      #   - docker_compose_check.msg.find('No such file or directory') != -1
     
     - name: Get required repos from git
       git: repo=https://github.com/gauti038/3yournode-challenge.git dest=/app/
-
-    - name: build the front-end image
-      shell: docker build -t frontend-vue:test1 /app/frontend
-
-    - name: build the backend-end image
-      shell: docker build -t backend-django:test1 /app/backend
     
     - name: run the service defined by docker-compose.yml
       docker_service:
