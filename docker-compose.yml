@@ -1,4 +1,4 @@
-version: '3.2'
+version: '2.1'
 
 services:
   postgres:
@@ -11,8 +11,11 @@ services:
       POSTGRES_PASSWORD: realworld123
       POSTGRES_USER: realworld
       POSTGRES_DB: sample
-    volumes:
-      - /app/db_backup/:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   backend:
     image: gka038/backend-django:test1
     container_name: backend
@@ -26,7 +29,8 @@ services:
     expose:
       - "8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
   frontend:
     image: gka038/frontend-vue:test1
     container_name: frontend
@@ -41,8 +45,8 @@ services:
       - "9000:9000"
       - "9001:9001"
     depends_on:
-      - backend
-      - frontend
+      - "backend"
+      - "frontend"
   scope:
     image: weaveworks/scope:1.10.2
     network_mode: "host"
@@ -58,4 +62,4 @@ services:
     ports:
       - "4040:4040"
     depends_on:
-      - backend
+      - "backend"
