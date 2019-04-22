@@ -31,12 +31,15 @@ sudo apt-get update && sudo apt-get install yarn
 download centos image
 http://centos.mirrors.estointernet.in/7.6.1810/isos/x86_64/CentOS-7-x86_64-Minimal-1810.iso
 
-/etc/yum.repos.d/CentOS-Base.repo
-[base]
-name=CentOS-$releasever - Base
-mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os
-baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+On file_
+######
+/etc/sysconfig/network-scripts/ifcfg-enp0s3
+######
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+# Note this was set to no
+ONBOOT=yes  
+#####
 
+https://www.tecmint.com/network-between-guest-vm-and-host-virtualbox/
 

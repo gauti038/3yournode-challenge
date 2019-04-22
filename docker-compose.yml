@@ -6,7 +6,7 @@ services:
     image: postgres
     expose:
       - "5432"
-    # restart: always
+    restart: always
     environment:
       POSTGRES_PASSWORD: realworld123
       POSTGRES_USER: realworld
@@ -16,7 +16,7 @@ services:
   backend:
     image: gka038/backend-django:test1
     container_name: backend
-    # restart: always
+    restart: always
     environment: 
       DATABASE_NAME: sample
       DATABASE_USER: realworld
@@ -30,13 +30,13 @@ services:
   frontend:
     image: gka038/frontend-vue:test1
     container_name: frontend
-    # restart: always
+    restart: always
     expose:
       - "80"
   reverse-proxy:
     image: gka038/reverse-proxy:test1
     container_name: reverse-proxy
-    # restart: always
+    restart: always
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -55,5 +55,7 @@ services:
     command:
       - "--probe.docker=true"
       - "--weave=false"
+    ports:
+      - "4040:4040"
     depends_on:
       - backend
